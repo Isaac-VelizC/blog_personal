@@ -10,11 +10,13 @@ import Blog from "containers/pages/blog";
 import Contact from "containers/pages/contact";
 
 import { AnimatePresence } from 'framer-motion';
+import Category from 'containers/pages/category';
+import PostDetail from 'containers/pages/postDetail';
+import Search from 'containers/pages/search';
 
 function AnimatedRoutes(){
 
     const location = useLocation();
-
     return(
         <AnimatePresence>
             <Routes location={location} key={location.pathname}>
@@ -28,6 +30,9 @@ function AnimatedRoutes(){
                 <Route path="/nosotros" element={<About />} />
                 <Route path="/carreras" element={<Careers />} />
                 <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<PostDetail />} />
+                <Route path="/search/:term" element={<Search />} />
+                <Route path="/category/:slug" element={<Category />} />
                 <Route path="/contacto" element={<Contact />} />
             </Routes>
         </AnimatePresence>

@@ -1,17 +1,37 @@
+import BlogList from "components/blog/blogList"
+import CategoriesHeader from "components/blog/categoriesHeader"
 import Footer from "components/navigation/Footer"
 import Navbar from "components/navigation/Navbar"
 import Layout from "hocs/layouts/layout"
 import { useEffect } from "react"
 import { Helmet } from "react-helmet-async"
+import { connect } from "react-redux"
+import { get_blog_list, get_blog_list_page } from "../../redux/actions/blogs/blog"
+import { get_categories } from "../../redux/actions/categories/categories"
 
-function Blog() {
-    useEffect(() => {
+
+function Blog({
+    get_categories,
+    categories,
+    get_blog_list,
+    get_blog_list_page,
+    posts,
+    count,
+    next,
+    previous,
+}){
+
+    useEffect(()=>{
         window.scrollTo(0,0)
-    }, [])
+        get_categories()
+        get_blog_list()
+        
+    },[])
+
     return(
         <Layout>
             <Helmet>
-                <title>Murkiva | Blogs</title>
+                <title>Murkiva | Blog</title>
                 <meta name="description" content="Agencia de software y marketing digital. Servicios de creacion de pagina web y desarrollo de aplicaciones." />
                 <meta name="keywords" content='agencia de software, agencia de marketing, creacion de pagina web' />
                 <meta name="robots" content='all' />
@@ -34,11 +54,32 @@ function Blog() {
                 <meta name="twitter:card" content="summary_large_image" />
             </Helmet>
             <Navbar/>
-            <div className="py-32">
-                Blog
+            <div className="pt-24">
+                <CategoriesHeader categories={categories&&categories}/>
+
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                {/* We've used 3xl here, but feel free to try other max-widths based on your needs */}
+                <div className="mx-auto max-w-6xl my-10">
+                    {/* Content goes here */}
+                    <BlogList posts={posts&&posts} get_blog_list_page={get_blog_list_page} count={count&&count}/>
+                    </div>
+                </div>
             </div>
-            <Footer/>
+                <Footer/>
         </Layout>
     )
 }
-export default Blog
+const mapStateToProps=state=>({
+    categories: state.categories.categories,
+    posts: state.blog.blog_list,
+    count: state.blog.count,
+    next: state.blog.next,
+    previous: state.blog.previous,
+
+})
+
+export default connect(mapStateToProps,{
+    get_categories,
+    get_blog_list,
+    get_blog_list_page
+}) (Blog)
